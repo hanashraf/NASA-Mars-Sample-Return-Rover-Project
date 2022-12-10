@@ -164,18 +164,34 @@ def perception_step(Rover):
                                               Rover.pos[0], Rover.pos[1],
                                               Rover.yaw, Rover.worldmap.shape[0], scale)
 
-    # 7) Update Rover worldmap (to be displayed on right side of screen)
+      # 7) Update Rover worldmap (to be displayed on right side of screen)
         # Example: Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1
         #          Rover.worldmap[rock_y_world, rock_x_world, 1] += 1
         #          Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
+
+        # Only update map if pitch an roll are near zero
+    if (Rover.pitch < 1 or Rover.pitch > 359) and (Rover.roll < 1 or Rover.roll > 359):
+        # increment = 10
+        Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] = 255
+        Rover.worldmap[rock_y_world, rock_x_world,1] = 255
+        Rover.worldmap[navigable_y_world, navigable_x_world, 2] = 255
+            # remove overlap mesurements
+        nav_pix = Rover.worldmap[:, :, 2] > 0
+        Rover.worldmap[nav_pix, 0] = 0
+            # clip to avoid overflow
+        Rover.worldmap = np.clip(Rover.worldmap, 0, 255)
 
     # 8) Convert rover-centric pixel positions to polar coordinates
     # Update Rover pixel distances and angles
         # Rover.nav_dists = rover_centric_pixel_distances
         # Rover.nav_angles = rover_centric_angles
-    
- 
-    
-    
+
+    dist, angles = to_polar_coords(xpix_navigable, ypix_navigable)
+    Rover.nav_dists = dist
+    Rover.nav_angles = angles
+        # Same for rock samples
+    dist, angles = to_polar_coords(xpix_rocks, ypix_rocks)
+    Rover.samples_dists = dist
+    Rover.samples_angles = angles
     return Rover
     
