@@ -34,6 +34,7 @@ In this project, we’ll do computer vision for robotics. We are going to build 
 ### 5) Convert map image pixel values to rover-centric coords
 -Navigable_x_world, navigablerover_coords(binary_img)
 ### 6) Convert rover-centric pixel values to world coordinates
+-After getting the rover-centric coordsfrom the previous step, we are going to convert it to world coordinates which will be used to update rover worldmap
 ### 7) Update Rover worldmap (to be displayed on right side of screen)
 -Example: Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1 <br />
      Rover.worldmap[rock_y_world, rock_x_world, 1] += 1 <br />
