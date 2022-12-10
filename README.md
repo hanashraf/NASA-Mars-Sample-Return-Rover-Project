@@ -17,7 +17,7 @@ In this project, we’ll do computer vision for robotics. We are going to build 
 -The destination box will be 2*dst_size on each side <br />
 -Set a bottom offset to account for the fact that the bottom of the image
 ### 2) Apply perspective transform
--This is done though the perspect_transform function
+-This is done though the perspect_transform function given source and destination points
 ### 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
 -Ignore half of the image as bad data <br />
 -Navigable[0:int(navigable.shape[0]/2), :] = 0 <br />
