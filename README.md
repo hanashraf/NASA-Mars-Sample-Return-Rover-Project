@@ -32,10 +32,11 @@ In this project, we’ll do computer vision for robotics. We are going to build 
      Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
      Rover.vision_image[:,:,2] = navigable terrain color-thresholded binary image
 ### 5) Convert map image pixel values to rover-centric coords
+-Navigable_x_world, navigablerover_coords(binary_img)
 ### 6) Convert rover-centric pixel values to world coordinates
 ### 7) Update Rover worldmap (to be displayed on right side of screen)
--Example: Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1
-     Rover.worldmap[rock_y_world, rock_x_world, 1] += 1
+-Example: Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1 <br />
+     Rover.worldmap[rock_y_world, rock_x_world, 1] += 1 <br />
      Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
 ### 8) Convert rover-centric pixel positions to polar coordinates
 -Update Rover pixel distances and angles
