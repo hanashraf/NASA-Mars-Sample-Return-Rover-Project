@@ -104,7 +104,10 @@ def perspect_transform(img, src, dst):
     warped = cv2.warpPerspective(img, M, (img.shape[1], img.shape[0]))# keep same size as input image
     
     return warped
-
+    
+def impose_range(xpix, ypix, range=80):
+    dist = np.sqrt(xpix*2 + ypix*2)
+    return xpix[dist < range], ypix[dist < range]
 
 # Apply the above functions in succession and update the Rover state accordingly
 def perception_step(Rover):
