@@ -111,14 +111,40 @@ def perception_step(Rover):
     # Perform perception steps to update Rover()
     # TODO: 
     # NOTE: camera image is coming to you in Rover.img
+    img = Rover.img
     # 1) Define source and destination points for perspective transform
+     # Define calibration box in source (actual) and destination (desired) coordinates
+        # These source and destination points are defined to warp the image
+        # to a grid where each 10x10 pixel square represents 1 square meter
+        # The destination box will be 2*dst_size on each side
+    dst_size = 5
+        # Set a bottom offset to account for the fact that the bottom of the image
+        # is not the position of the rover but a bit in front of it
+        # this is just a rough guess, feel free to change it!
+    bottom_offset = 6
+    source = np.float32([[14, 140], [301 ,140],[200, 96], [118, 96]])
+    destination = np.float32([[img.shape[1]/2 - dst_size, img.shape[0] - bottom_offset],
+                  [img.shape[1]/2 + dst_size, img.shape[0] - bottom_offset],
+                  [img.shape[1]/2 + dst_size, img.shape[0] - 2*dst_size - bottom_offset],
+                  [img.shape[1]/2 - dst_size, img.shape[0] - 2*dst_size - bottom_offset],
+                  ])
+            
+            
     # 2) Apply perspective transform
+    warped = perspect_transform(img, source, destination)      
+       
     # 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
+    navigable = color_thresh(warped)
+    rock_samples = rock_thresh(warped)
+    obstacles = obstacle_thresh(warped)
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
         # Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image
         #          Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
         #          Rover.vision_image[:,:,2] = navigable terrain color-thresholded binary image
-
+ 
+    Rover.vision_image[:,:,0] = obstacles[:,:] 
+    Rover.vision_image[:,:,1] = rock_samples[:,:]
+    Rover.vision_image[:,:,2] = navigable[:,:]
     # 5) Convert map image pixel values to rover-centric coords
     # 6) Convert rover-centric pixel values to world coordinates
     # 7) Update Rover worldmap (to be displayed on right side of screen)
