@@ -12,24 +12,24 @@ In this project, we’ll do computer vision for robotics. We are going to build 
 8) Convert rover-centric pixel positions to polar coordinates
 
 ### 1) Define source and destination points for perspective transform
--Define calibration box in source (actual) and destination (desired) coordinates
--These source and destination points are defined to warp the image to a grid where each 10x10 pixel square represents 1 square meter
--The destination box will be 2*dst_size on each side
+-Define calibration box in source (actual) and destination (desired) coordinates <br />
+-These source and destination points are defined to warp the image to a grid where each 10x10 pixel square represents 1 square meter <br />
+-The destination box will be 2*dst_size on each side <br />
 -Set a bottom offset to account for the fact that the bottom of the image
 ### 2) Apply perspective transform
 -This is done though the perspect_transform function
 ### 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
--Ignore half of the image as bad data
--Navigable[0:int(navigable.shape[0]/2), :] = 0
--Obstacles are simply navigable inverted
--Ignore half of the image as bad data
--Obstacles[0:int(obstacles.shape[0]/2),:] = 0
--Identify the rock
--Convert BGR to HSV
+-Ignore half of the image as bad data <br />
+-Navigable[0:int(navigable.shape[0]/2), :] = 0 <br />
+-Obstacles are simply navigable inverted <br />
+-Ignore half of the image as bad data <br />
+-Obstacles[0:int(obstacles.shape[0]/2),:] = 0 <br />
+-Identify the rock <br />
+-Convert BGR to HSV <br />
 -Threshold the HSV image to get only upper_yellow colors
 ### 4) Update Rover.vision_image (this will be displayed on left side of screen)
--Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image
-     Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
+-Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image <br />
+     Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image <br />
      Rover.vision_image[:,:,2] = navigable terrain color-thresholded binary image
 ### 5) Convert map image pixel values to rover-centric coords
 -Navigable_x_world, navigablerover_coords(binary_img)
@@ -39,8 +39,8 @@ In this project, we’ll do computer vision for robotics. We are going to build 
      Rover.worldmap[rock_y_world, rock_x_world, 1] += 1 <br />
      Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
 ### 8) Convert rover-centric pixel positions to polar coordinates
--Update Rover pixel distances and angles
-     Rover.nav_dists = rover_centric_pixel_distances
+-Update Rover pixel distances and angles <br />
+     Rover.nav_dists = rover_centric_pixel_distances <br />
      Rover.nav_angles = rover_centric_angles
 
 
