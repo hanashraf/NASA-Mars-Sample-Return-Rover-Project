@@ -11,5 +11,13 @@ In this project, we’ll do computer vision for robotics. We are going to build 
 7) Update Rover worldmap (to be displayed on right side of screen)
 8) Convert rover-centric pixel positions to polar coordinates
 
+### 1) Define source and destination points for perspective transform
+### 2) Apply perspective transform
+### 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
+### 4) Update Rover.vision_image (this will be displayed on left side of screen)
+### 5) Convert map image pixel values to rover-centric coords
+### 6) Convert rover-centric pixel values to world coordinates
+### 7) Update Rover worldmap (to be displayed on right side of screen)
+### 8) Convert rover-centric pixel positions to polar coordinates
 
 
