@@ -77,7 +77,7 @@ def perspect_transform(img, src, dst):
     
     return warped
 
-def impose_range(xpix, ypix, range=70):
+def impose_range(xpix, ypix, range=100):
     dist = np.sqrt(xpix**2 + ypix**2)
     return xpix[dist < range], ypix[dist < range]
 
