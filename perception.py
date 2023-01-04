@@ -10,23 +10,19 @@ def obstacle_thresh(img, obs_thresh=(100, 100, 100)):
                     (img[:,:,1] < obs_thresh[1]) &
                     (img[:,:,2] < obs_thresh[2]))
     # Index the array of zeros with the boolean array and set to 1
-    color_select[below_thresh] = 255
+    color_select[below_thresh] = 1
     return color_select
   
     #scipy.misc.imsave('../output/warped_threshed.jpg', threshed*255)
 def rock_thresh(img):
   #Finding yellow rock samples
-    color_rock = np.zeros_like(img[:,:,0])
-    yellow_lower_thresh=(20, 100, 100)
-    yellow_upper_thresh=(50, 255, 255)
-    rock=(img[:,:,0] < yellow_upper_thresh[0]) \
-      & (img[:,:,1] < yellow_upper_thresh[1]) \
-      & (img[:,:,2] > yellow_upper_thresh[2]) \
-      & (img[:,:,0] > yellow_lower_thresh[0]) \
-      & (img[:,:,1] > yellow_lower_thresh[1]) \
-      & (img[:,:,2] < yellow_lower_thresh[2])
-      
-    color_rock[rock]=255
+    # identify the rock
+    lower_yellow = np.array([24 - 5, 100, 100])
+    upper_yellow = np.array([24 + 5, 255, 255])
+            # Convert BGR to HSV
+    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+            # Threshold the HSV image to get only upper_yellow colors
+    color_rock = cv2.inRange(hsv, lower_yellow, upper_yellow)
     return color_rock
     
 # Identify pixels above the threshold
@@ -106,7 +102,7 @@ def perspect_transform(img, src, dst):
     return warped
     
 def impose_range(xpix, ypix, range=80):
-    dist = np.sqrt(xpix*2 + ypix*2)
+    dist = np.sqrt(xpix**2 + ypix**2)
     return xpix[dist < range], ypix[dist < range]
 
 # Apply the above functions in succession and update the Rover state accordingly
@@ -148,10 +144,13 @@ def perception_step(Rover):
     Rover.vision_image[:,:,0] = obstacles[:,:] 
     Rover.vision_image[:,:,1] = rock_samples[:,:]
     Rover.vision_image[:,:,2] = navigable[:,:]
+    idx = np.nonzero(Rover.vision_image)
+    Rover.vision_image[idx] = 255
     # 5) Convert map image pixel values to rover-centric coords
     xpix_navigable, ypix_navigable = rover_coords(navigable)
     xpix_obstacles, ypix_obstacles = rover_coords(obstacles)
     xpix_rocks, ypix_rocks = rover_coords(rock_samples)
+
 
     # 6) Convert rover-centric pixel values to world coordinates
     scale = 10.0
@@ -197,4 +196,3 @@ def perception_step(Rover):
     Rover.samples_dists = dist
     Rover.samples_angles = angles
     return Rover
-    
