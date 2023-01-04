@@ -1,4 +1,3 @@
-# Do the necessary imports
 import argparse
 import shutil
 import base64
@@ -22,7 +21,6 @@ from perception import perception_step
 from decision import decision_step
 from supporting_functions import update_rover, create_output_images
 # Initialize socketio server and Flask application 
-# (learn more at: https://python-socketio.readthedocs.io/en/latest/)
 sio = socketio.Server()
 app = Flask(__name__)
 
@@ -40,6 +38,11 @@ class RoverState():
     def __init__(self):
         self.start_time = None # To record the start time of navigation
         self.total_time = None # To record total duration of naviagation
+        self.perc_mapped = 0
+        self.home_x = 0 #To record initial x position
+        self.home_y = 0 #To record initial y position
+        self.stuck_time = 0 # To record moment that got stuck
+        self.rock_time = 0 # To record moment that started to go for the near rock sample
         self.img = None # Current camera image
         self.pos = None # Current position (x, y)
         self.yaw = None # Current yaw angle
@@ -49,19 +52,21 @@ class RoverState():
         self.steer = 0 # Current steering angle
         self.throttle = 0 # Current throttle value
         self.brake = 0 # Current brake value
-        self.nav_angles = None # Angles of navigable terrain pixels
+        self.nav_angles = None  # Angles of navigable terrain pixels
         self.nav_dists = None # Distances of navigable terrain pixels
+        self.samples_angles = None  # Angles of rock sample pixels
+        self.samples_dists = None  # Distances of rock sample pixels
         self.ground_truth = ground_truth_3d # Ground truth worldmap
-        self.mode = 'forward' # Current mode (can be forward or stop)
-        self.throttle_set = 0.2 # Throttle setting when accelerating
+        self.mode = ['forward'] # Current mode (can be forward or stop)
+        self.throttle_set = 0.5 # Throttle setting when accelerating
         self.brake_set = 10 # Brake setting when braking
         # The stop_forward and go_forward fields below represent total count
         # of navigable terrain pixels.  This is a very crude form of knowing
         # when you can keep going and when you should stop.  Feel free to
         # get creative in adding new fields or modifying these!
-        self.stop_forward = 50 # Threshold to initiate stopping
+        self.stop_forward = 100 # Threshold to initiate stopping
         self.go_forward = 500 # Threshold to go forward again
-        self.max_vel = 2 # Maximum velocity (meters/second)
+        self.max_vel = 3 # Maximum velocity (meters/second)
         # Image output from perception step
         # Update this image to display your intermediate analysis steps
         # on screen in autonomous mode
